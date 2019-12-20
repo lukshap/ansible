@@ -1,0 +1,37 @@
+# List of packages to install
+ansible_ssh_user: 'root'
+ansible_port: 2200
+repo_dir: /root/actonic
+git_repos:
+  k8s: ssh://git@git.actonic.de:7999/aai/k8s.git
+  docker_images: ssh://git@git.actonic.de:7999/aai/docker-images.git
+  puppeteer: ssh://git@git.actonic.de:7999/aai/puppeteer.git
+  atlassian_automated_infrastructure: ssh://git@git.actonic.de:7999/aai/front-end.git
+packages:
+  - sysstat
+  - net-tools
+  - atop
+  - git
+  - pigz
+  - software-properties-common
+sshd_config:
+  Port: '2200'
+  AddressFamily: 'any'
+  UseDNS: 'no'
+  SyslogFacility: 'AUTHPRIV'
+  # Authentication:
+  LoginGraceTime: '1m'
+  StrictModes: 'yes'
+  MaxAuthTries: '20'
+  MaxSessions: '100'
+  PermitRootLogin: 'yes'
+  PubkeyAuthentication: 'yes'
+  IgnoreRhosts: 'yes'
+  PasswordAuthentication: 'yes'
+  PermitEmptyPasswords: 'no'
+  ClientAliveInterval: '0'
+  AllowAgentForwarding: 'yes'
+  AllowTcpForwarding: 'yes'
+ssh_public_keys:
+  lukshap: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCz0JrgPJs80Ob3PCp1qedFs2RZUton6UYMhkvMfme6FZXdntQRVUN9QwdVDb6MdzkePgmGRxVUcY/cysbh/lg/Tr/xeA55h9+zmHc3yorgU2iBl45DW0aY7InMooVZLhqWqbGf7Xe0qwkS1mPkZJLtpMYIveJBCklS0hxPV2bW96r+BYxewJ26iMUvgc8TYuPvsLFw8lczd1okBpUdsMfvkg/HsvjDzBI/QDP4f9DX6PBxVFMUvEKozL4hTFLmDE2AfSnUbqwDRLFNBZcCx5EO4I4IdMVVeE9s4KdIoHPY/Ger/RqQWO8YA967dRscqQPleixzeV+JNO10cPmkBD1jQDXtR+ZFOKHnvDeQqLpTEF1tIXYB3/ZbjBhF+jnaNwEzz03lhA3ZKbmvEW6ma1/Izt3CPhLEcHFQ6Qf7QQx+LCpRLOeYJa90jQqFcLg9J3D/zpRPiXOGdsgbqw6KVuX2fucdEFdCjI4PT4bBQxD1hdlpU5zVJ9Eqvh6mxoVL5UZxgvwEtl8hqCLlXZn7higGiRIHujpGbAv8AL5bea07l1CJ9VlUv3F3ADU3D/RK5DeMLWohUje4Z7lmTwcYJT0pcnsag1PWqsKWlbT/RhimWy9yiX8Kgju01VbJkI2Ncun+Tvsl+iguTBDzA7l2F16CvucKJ1tCr//CyCW2VzZRzQ== lukshap@gmail.com
+  jenkins: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDY9O5XMENbZEs1oAsDIeEf6lFhT5rjoUl1PqYjWzsaohODvGmihxf/AqfzurKIQlN9lLOE5HfqaSa0HG7+U9BssQsiR1bfEMYqrhXzQMirBkMAz076C7yfN+cIVEfTsiDU9WylPVH0N1JcK7oMGMQi6xojMfUuUMS2p+pePScztZ+Ge9rZ9tCFMK5Pp0b0xRE1MIL71ZeKPEEKI6N/KCWFVKLEv+Ebx8YtGsJS+P/UhESA07h6rJ4xM3UfTyzgjcUokPKm99nNadc23L4QkLp1DHZvVJTLqsMBWDzU9D1eU3GNXKd4Fm1DGliHk8xAPVZB9GIqWJxCfgDJUeg8AyH/ jenkins@noreply.local

@@ -1,0 +1,66 @@
+---
+# tasks file for db
+#- name: Set hostname
+#  hostname:
+#    name: "{{ hostname }}"
+#
+#- name: Add an Apt signing key of the repository
+#  apt_key:
+#    url: "{{ db.apt_key_url }}"
+#    state: present
+#
+#- name: Install db repository
+#  apt_repository:
+#    repo: "{{ db.apt_repo }}"
+#    state: present
+#
+#- name: Install database
+#  apt:
+#    name: "{{ db.package }}"
+#  register: db_installed
+#
+#- name: Ensure the PostgreSQL service is running
+#  systemd:
+#    name: "{{ db.service }}"
+#    state: started
+#    enabled: yes
+#
+#- name: Set users' passwords
+#  become: true
+#  become_user: "{{ db.db_main }}"
+#  postgresql_user:
+#    name: "{{ item.key }}"
+#    password: "{{ item.value }}"
+#  with_dict: "{{ db.users }}"
+#  when: "{{ db_installed.changed }}"
+#
+#- name: Set configs files
+#  template:
+#    src: "{{ item.value.template }}"
+#    dest: "{{ item.value.path }}"
+#    mode: '0644'
+#  with_dict: "{{ db.configs }}"
+#  notify: restart db
+#
+#- name: Clone git repository
+#  git:
+#    repo: "{{ item.value }}"
+#    dest: "{{ repo_dir }}/{{ item.key }}"
+#    accept_hostkey: true
+#  with_dict: "{{ git_repos_clone }}"
+#
+#- name: Set crontab
+#  cron:
+#    name: "{{ item.key }}"
+#    minute: "{{ item.value.minute }}"
+#    hour: "{{ item.value.hour }}"
+#    job: "{{ item.value.command }}"
+#  with_dict: "{{ cron }}"
+
+- name: Create folders
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  with_items: "{{ folders }}"
+

@@ -1,0 +1,7 @@
+---
+# handlers file for db
+- name: restart db
+  systemd:
+    name: "{{ db.service }}"
+    state: restarted
+    enabled: yes

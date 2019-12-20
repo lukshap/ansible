@@ -1,0 +1,6 @@
+--- # ansible playbook for database deployment
+- hosts: dbservers
+  gather_facts: yes
+  roles:
+#   - common
+   - db

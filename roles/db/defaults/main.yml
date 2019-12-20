@@ -1,0 +1,69 @@
+---
+# defaults file for db
+hostname: db
+git_repos_clone:
+  docker-images: "{{ git_repos.docker_images }}"
+db:
+  service: postgresql
+  db_main: postgres
+  users:
+    postgres: "{{ db_postgres_password }}"
+    app: "{{ db_user_password }}"
+  package:
+    - postgresql-9.6
+    - python-psycopg2
+    - libpq-dev
+  apt_key_url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+  apt_repo: deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main
+  configs:
+    postgresql_conf:
+      template: postgresql.conf.j2
+      path: /etc/postgresql/9.6/main/postgresql.conf
+      port: 6341
+      max_connections: 9999
+  #    shared_buffers: 16GB
+      shared_buffers: 6GB
+  #    effective_cache_size: 60GB
+      effective_cache_size: 6GB
+      maintenance_work_mem: 2GB
+      checkpoint_completion_target: 0.7
+      wal_buffers: 16MB
+      default_statistics_target: 100
+      random_page_cost: 1.1
+      effective_io_concurrency: 200
+      work_mem: 300kB
+      min_wal_size: 1GB
+      max_wal_size: 2GB
+      max_worker_processes: 12
+      max_parallel_workers_per_gather: 6
+      log_rotation_size: 1024MB
+      log_rotation_age: 1d
+    pg_hba_conf:
+      template: pg_hba.conf.j2
+      path: /etc/postgresql/9.6/main/pg_hba.conf
+    pgpass:
+      template: pgpass.j2
+      path: /root/.pgpass
+
+cron:
+  backup databases:
+    minute: 0
+    hour: 0
+    command: bash /root/actonic/docker-images/backup/postgres_dbdumps/alldbbackup.sh >> /root/actonic/docker-images/backup/postgres_dbdumps/alldbbackup.sh.log 2>&1
+  put databases backups to ftp:
+    minute: 0
+    hour: 2
+    command: bash /root/actonic/docker-images/backup/postgres_dbdumps/postrges_dbdump_to_ftp.sh >> bash /root/actonic/docker-images/backup/postgres_dbdumps/postrges_dbdump_to_ftp.sh.log 2>&1
+  put ceph rbd images backups to ftp:
+    minute: 0
+    hour: 2
+    command: bash /root/actonic/docker-images/backup/ceph_rbd/ceph_rbd_images_to_ftp.sh >> /root/actonic/docker-images/backup/ceph_rbd/ceph_rbd_images_to_ftp.sh.log 2>&1
+  put k8s backups to ftp:
+    minute: 0
+    hour: 2
+    command: bash /root/actonic/docker-images/backup/k8s_etcd/k8s_etcd_to_ftp.sh >> /root/actonic/docker-images/backup/k8s_etcd/k8s_etcd_to_ftp.sh.log 2>&1
+
+folders:
+  - /opt/ceph_rbd_images
+  - /opt/k8s_etcd
+  - /opt/postgres_dbdumps
