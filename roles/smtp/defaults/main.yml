@@ -1,0 +1,5 @@
+---
+# defaults file for smtp
+packages:
+  - msmtp
+  - msmtp-mta

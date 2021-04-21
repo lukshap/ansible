@@ -1,0 +1,30 @@
+---
+# defaults file for glusterfs
+apt_repository:
+  - ppa:gluster/glusterfs-3.10
+glusterfs_packages:
+  - glusterfs-server
+glusterfs:
+  service: glusterd
+  volumes:
+    - ceph_rbd_images
+    - k8s_etcd
+    - postgres_dbdumps
+    - jenkins_home_backup
+cron:
+  put databases backups to ftp:
+    minute: 0
+    hour: 3
+    command: bash /root/actonic/docker-images/backup/postgres_dbdumps/postrges_dbdump_to_ftp.sh >> /root/actonic/docker-images/backup/postgres_dbdumps/postrges_dbdump_to_ftp.sh.log 2>&1
+  put ceph rbd images backups to ftp:
+    minute: 0
+    hour: 3
+    command: bash /root/actonic/docker-images/backup/ceph_rbd/ceph_rbd_images_to_ftp.sh >> /root/actonic/docker-images/backup/ceph_rbd/ceph_rbd_images_to_ftp.sh.log 2>&1
+  put k8s backups to ftp:
+    minute: 0
+    hour: 3
+    command: bash /root/actonic/docker-images/backup/k8s_etcd/k8s_etcd_to_ftp.sh >> /root/actonic/docker-images/backup/k8s_etcd/k8s_etcd_to_ftp.sh.log 2>&1
+  put jenkins home backup to ftp:
+    minute: 0
+    hour: 3
+    command: bash /root/actonic/docker-images/backup/jenkins_home_backup/jenkins_home_backup_to_ftp.sh >> /root/actonic/docker-images/backup/jenkins_home_backup/jenkins_home_backup_to_ftp.sh.log 2>&1

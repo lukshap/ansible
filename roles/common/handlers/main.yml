@@ -7,4 +7,6 @@
     enabled: yes
 
 - name: restart ufw
-  service: name=ufw state=restarted
+  service:
+    name: ufw
+    state: restarted

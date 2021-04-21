@@ -1,0 +1,10 @@
+account default
+auth on
+tls on
+tls_trust_file /etc/ssl/certs/ca-certificates.crt
+logfile /var/log/mail.log
+host     smtp.gmail.com
+port     587
+from     {{ smtp_gmail_mailbox }}
+user     {{ smtp_gmail_mailbox }}
+password {{ smtp_gmail_pass }}

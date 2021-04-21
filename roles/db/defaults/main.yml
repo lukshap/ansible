@@ -1,18 +1,19 @@
 ---
 # defaults file for db
-hostname: db
 git_repos_clone:
-  docker-images: "{{ git_repos.docker_images }}"
+  docker-images: "{{ git_repos['docker-images'] }}"
 db:
   service: postgresql
   db_main: postgres
   users:
     postgres: "{{ db_postgres_password }}"
     app: "{{ db_user_password }}"
-  package:
+  packages:
     - postgresql-9.6
     - python-psycopg2
     - libpq-dev
+  pip_packages:
+    - psycopg2
   apt_key_url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
   apt_repo: deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main
   configs:
@@ -21,10 +22,11 @@ db:
       path: /etc/postgresql/9.6/main/postgresql.conf
       port: 6341
       max_connections: 9999
-  #    shared_buffers: 16GB
-      shared_buffers: 6GB
-  #    effective_cache_size: 60GB
-      effective_cache_size: 6GB
+#      max_connections: 99
+      shared_buffers: 16GB
+#      shared_buffers: 2GB
+      effective_cache_size: 60GB
+#      effective_cache_size: 6GB
       maintenance_work_mem: 2GB
       checkpoint_completion_target: 0.7
       wal_buffers: 16MB
@@ -44,26 +46,9 @@ db:
     pgpass:
       template: pgpass.j2
       path: /root/.pgpass
-
+glusterfs_mount_dir: postgres_dbdumps
 cron:
   backup databases:
     minute: 0
     hour: 0
     command: bash /root/actonic/docker-images/backup/postgres_dbdumps/alldbbackup.sh >> /root/actonic/docker-images/backup/postgres_dbdumps/alldbbackup.sh.log 2>&1
-  put databases backups to ftp:
-    minute: 0
-    hour: 2
-    command: bash /root/actonic/docker-images/backup/postgres_dbdumps/postrges_dbdump_to_ftp.sh >> bash /root/actonic/docker-images/backup/postgres_dbdumps/postrges_dbdump_to_ftp.sh.log 2>&1
-  put ceph rbd images backups to ftp:
-    minute: 0
-    hour: 2
-    command: bash /root/actonic/docker-images/backup/ceph_rbd/ceph_rbd_images_to_ftp.sh >> /root/actonic/docker-images/backup/ceph_rbd/ceph_rbd_images_to_ftp.sh.log 2>&1
-  put k8s backups to ftp:
-    minute: 0
-    hour: 2
-    command: bash /root/actonic/docker-images/backup/k8s_etcd/k8s_etcd_to_ftp.sh >> /root/actonic/docker-images/backup/k8s_etcd/k8s_etcd_to_ftp.sh.log 2>&1
-
-folders:
-  - /opt/ceph_rbd_images
-  - /opt/k8s_etcd
-  - /opt/postgres_dbdumps

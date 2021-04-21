@@ -1,2 +1,16 @@
 ---
 # defaults file for ceph
+hostname: ceph
+git_repos_clone:
+  docker-images: "{{ git_repos['docker-images'] }}"
+pip_packages:
+  - kubernetes
+cron:
+  backup ceph_rbd:
+    minute: 0
+    hour: 0
+    command: bash /root/actonic/docker-images/backup/ceph_rbd/ceph_rbd_backup.sh >> /root/actonic/docker-images/backup/ceph_rbd/ceph_rbd_backup.sh.runlog 2>&1
+  backup pv-rbd_images mapping:
+    minute: 0
+    hour: 0
+    command: python3 /root/actonic/docker-images/backup/ceph_rbd/pv-rbd_images_mapping.py -f /mnt/ceph_rbd_images >> /root/actonic/docker-images/backup/ceph_rbd/pv-rbd_images_mapping.py.runlog 2>&1

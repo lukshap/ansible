@@ -1,0 +1,48 @@
+---
+## tasks file for k8s
+- import_tasks: install_packages.yml
+
+# Connect to glusterfs to backup data
+- import_tasks: glusterfs_client.yml
+  when: hostname == "vmd31384.contaboserver.net"
+
+- name: remove swap entry from fstab
+  lineinfile:
+    path: /etc/fstab
+    regexp: "swap"
+    state: absent
+    backup: yes
+
+- name: Disable swap
+  shell: swapoff --all
+
+- name: Set crontab
+  cron:
+    name: "{{ item.key }}"
+    minute: "{{ item.value.minute }}"
+    hour: "{{ item.value.hour }}"
+    job: "{{ item.value.command }}"
+  with_dict: "{{ cron }}"
+  when: hostname == "vmd31384.contaboserver.net"
+
+- import_tasks: unarchive_backup_file.yml
+  when: hostname == "vmd31384.contaboserver.net"
+  tags: [restore]
+
+- import_tasks: restore_etcd.yml
+  when: hostname == "vmd31384.contaboserver.net"
+  tags: [restore]
+
+- import_tasks: restore_pki.yml
+  when: hostname == "vmd31384.contaboserver.net"
+  tags: [restore]
+
+- import_tasks: init_k8s.yml
+  when: hostname == "vmd31384.contaboserver.net"
+  tags: [restore]
+
+- import_tasks: get_k8s_tokens.yml
+  when: hostname == "vmd31384.contaboserver.net"
+
+- import_tasks: join_master_to_cluster.yml
+  when: hostname != "vmd31384.contaboserver.net"

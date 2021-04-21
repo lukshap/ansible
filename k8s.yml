@@ -1,0 +1,15 @@
+--- # ansible playbook for k8s masters deployment
+- hosts: k8s_master
+  gather_facts: yes
+  roles:
+#   - common
+#   - docker
+#   - smtp
+   - k8s_master
+
+- hosts: k8s_node
+  gather_facts: yes
+  roles:
+#   - common
+#   - docker
+   - k8s_node

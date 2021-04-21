@@ -1,0 +1,12 @@
+---
+- name: Get Kubernetes cluster token to connect k8s node to cluster
+  shell: kubeadm token create
+  register: K8S_TOKEN
+
+- name: Get cluster CA Hash to connect Kubernetes node to cluster
+  shell: openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'
+  register: K8S_MASTER_CA_HASH
+
+- name: Get cluster CA secret to decrypt certificate
+  shell: kubeadm init phase upload-certs --upload-certs 2> /dev/null | egrep "^[0-9a-z]*$"
+  register: K8S_MASTER_CA_SECRET

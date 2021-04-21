@@ -1,0 +1,30 @@
+---
+# Restore /var/lib/jenkins from backup
+# Make sure Jenkins stopped
+- name: Ensure Jenkins is stopped
+  systemd:
+    name: jenkins
+    state: stopped
+    enabled: yes
+
+- name: Remove jenkins home directory
+  file:
+    path: "{{ jenkins.jenkins_home_dir }}/jenkins"
+    state: absent
+
+- name: Get the most recent backup file
+  shell: "ls /mnt/{{ glusterfs_mount_dir }} | sort -nr | head -n1"
+  register: jenkins_home_backup_file
+
+- name: Extract "{{ glusterfs_mount_dir }}"
+  unarchive:
+    remote_src: yes
+    src: "/mnt/{{ glusterfs_mount_dir }}/{{ jenkins_home_backup_file.stdout }}"
+    dest: "{{ jenkins.jenkins_home_dir }}"
+  notify: Ensure Jenkins is started and running
+
+- name: Allow access to port "{{ jenkins_http_port }}"
+  ufw:
+    rule: allow
+    port: "{{ jenkins_http_port }}"
+  notify: restart ufw

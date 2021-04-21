@@ -1,23 +1,31 @@
 [dbservers]
-#185.2.101.212
-173.212.242.197
+185.2.101.212 hostname=db
+
+[control]
+207.180.199.109 hostname=control
+185.2.100.244 hostname=control
+
+[jenkins]
+207.180.199.109 hostname=control
+
+[haproxy]
+213.136.73.176 hostname=vmd31384.contaboserver.net port=6444
+
+[k8s_master]
+213.136.73.176 hostname=vmd31384.contaboserver.net haproxy_port=6444
+#167.86.115.220 hostname=k8s-master2 haproxy_port=6444
+#5.189.157.116 hostname=k8s-master3 haproxy_port=6444
+
+[k8s_node]
+#173.212.237.39 hostname=k8s-node1 haproxy_port=6444
+#173.249.51.216 hostname=k8s-node2 haproxy_port=6444
+207.180.206.210 hostname=k8s-node3 haproxy_port=6444
+#5.189.157.116 hostname=k8s-node5 haproxy_port=6444
+#167.86.115.220 hostname=k8s-node3 haproxy_port=6444
 
 [ceph]
 91.205.172.241
 79.143.179.36
-
-[control]
-207.180.199.109
-185.2.100.244
-
-[k8s_master]
-213.136.73.176
-167.86.115.220
-
-[k8s_node]
-173.212.237.39
-173.249.51.216
-207.180.206.210
 
 [prometheus]
 80.241.211.125

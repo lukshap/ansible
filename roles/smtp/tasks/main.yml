@@ -1,0 +1,11 @@
+---
+# tasks file for msmtp
+- name: Install msmtp
+  apt:
+    name: "{{ packages }}"
+
+- name: Set msmtp config file
+  template:
+    src: "msmtprc.j2"
+    dest: "/etc/msmtprc"
+    mode: '0640'

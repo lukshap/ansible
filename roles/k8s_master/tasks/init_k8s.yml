@@ -1,0 +1,34 @@
+---
+- name: Ensure dir "{{ kubeadm_config.dir }}/" exists
+  file:
+    path: "{{ kubeadm_config.dir }}/"
+    state: directory
+    follow: true
+
+- name: Configure kubeadm config file
+  template:
+    src: kubeadm-config.yaml.j2
+    dest: "{{ kubeadm_config.dir }}/{{ kubeadm_config.file }}"
+    mode: 0644
+
+- name: Init Kubernetes cluster
+  shell: |
+    kubeadm init --ignore-preflight-errors=DirAvailable--var-lib-etcd \
+                 --config /etc/kubernetes/kubeadm/kubeadm-config.yaml \
+                 --upload-certs
+  register: init_cluster
+
+- name: Output the k8s cluster initilization
+  debug: var=init_cluster
+
+- name: Ensure dir $HOME/.kube exists
+  file:
+    path: "/root/{{ admin_dir }}"
+    state: directory
+    follow: true
+
+- name: Copy admin file
+  copy:
+    remote_src: yes
+    src: "{{ admin_file_src }}"
+    dest: "/root/{{ admin_dir }}/{{ admin_file_dst }}"

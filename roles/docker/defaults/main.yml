@@ -1,0 +1,10 @@
+---
+# defaults file for docker
+docker:
+  apt_key_url: https://download.docker.com/linux/ubuntu/gpg
+  apt_repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu disco stable
+#  apt_repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+  packages:
+    - docker-ce=5:19.03.3~3-0~ubuntu*
+    - docker-ce-cli=5:19.03.3~3-0~ubuntu*
+    - containerd.io=1.2.10-3

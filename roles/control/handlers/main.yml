@@ -1,0 +1,9 @@
+---
+# handlers file for control
+- name: run npm installation file
+  shell: /tmp/install.sh
+
+- name: restart ufw
+  service:
+    name: ufw
+    state: restarted

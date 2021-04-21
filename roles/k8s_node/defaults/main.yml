@@ -1,0 +1,9 @@
+---
+# defaults file for k8s_node
+apt_key_url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+apt_repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+packages:
+  - kubelet=1.15.2-00
+  - kubeadm=1.15.2-00
+  - kubectl=1.15.2-00
+controlPlaneEndpoint: "{{ groups['haproxy'][0] }}:{{ haproxy_port }}"

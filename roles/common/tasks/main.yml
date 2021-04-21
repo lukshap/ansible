@@ -1,10 +1,20 @@
 ---
 # tasks file for common
-- name: Create the "{{ repo_dir }}" directory if it does not exist
+- name: Set hostname
+  hostname:
+    name: "{{ hostname }}"
+
+- name: Create the "{{ repo_dir }}" folder if it does not exist
   file:
     path: "{{ repo_dir }}"
     state: directory
     mode: '0755'
+
+- name: Update apt packages
+  become: true
+  apt:
+    upgrade: no
+    update_cache: yes
 
 - name: Install packages
   apt:
@@ -32,13 +42,17 @@
 - name: Allow ssh to certain port only
   ufw:
     rule: allow
-    port: 2200
+    port: "{{ sshd_config.port }}"
   notify: restart ufw
+  tags:
+    - not_k8s
 
 - name: Set firewall default policy
   ufw:
     state: enabled
     policy: reject
+  tags:
+    - not_k8s
 
 - name: Configure ufw firewall
   ufw:
@@ -46,6 +60,8 @@
     src: '{{ item }}'
   with_items: "{{ groups['all'] }}"
   notify: restart ufw
+  tags:
+    - not_k8s
 
 
 

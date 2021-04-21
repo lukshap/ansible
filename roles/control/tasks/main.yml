@@ -1,0 +1,37 @@
+---
+# tasks file for control
+- name: Allow access to port "{{ nginx.port }}"
+  ufw:
+    rule: allow
+    port: "{{ item }}"
+  with_items: "{{ nginx.ports }}"
+  notify: restart ufw
+
+- name: Install pip packages
+  pip:
+    name: "{{ pip_packages }}"
+
+- name: Clone git repositories
+  git:
+    repo: "{{ item.value }}"
+    dest: "{{ repo_dir }}/{{ item.key }}"
+    accept_hostkey: true
+    force: true
+  with_dict: "{{ git_repos }}"
+
+- name: Download npm installation file
+  get_url:
+    url: "{{ npm_url }}"
+    dest: /tmp/install.sh
+    mode: '0744'
+  retries: 5
+  delay: 10
+  notify: run npm installation file
+
+- name: Set crontab
+  cron:
+    name: "{{ item.key }}"
+    minute: "{{ item.value.minute }}"
+    hour: "{{ item.value.hour }}"
+    job: "{{ item.value.command }}"
+  with_dict: "{{ cron }}"

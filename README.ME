@@ -1,0 +1,53 @@
+On the ansible host:
+0. k8s all nodes - UBUNTU 18.04
+1. create the ~/.ansible_vault_pass.txt file with password to the vault file - https://git.actonic.de/projects/AAI/repos/iac/browse/group_vars/all/vault
+
+Run ansible:
+    ansible-playbook <playbook> --private-key=<private_key_path> --vault-password-file=<vault_password_path>
+    ansible-playbook db.yml --private-key=~/.ssh/actonic --vault-password-file=~/.ansible_vault_pass.txt --tags "glusterfs_server"
+    ansible-playbook k8s.yml --private-key=~/.ssh/actonic --vault-password-file=~/.ansible_vault_pass.txt --skip-tags "not_k8s,restore,join_node"
+    ansible-playbook k8s.yml --private-key=~/.ssh/actonic --vault-password-file=~/.ansible_vault_pass.txt --skip-tags "not_k8s"
+
+Restoring precedence:
+1. db.yml (because glusterfs role with backups is set in db.yml):
+     ansible-playbook db.yml --private-key=~/.ssh/actonic --vault-password-file=~/.ansible_vault_pass.txt
+2. control.yml:
+     ansible-playbook control.yml --private-key=~/.ssh/actonic --vault-password-file=~/.ansible_vault_pass.txt
+3. jenkins.yml:
+  3.1 You can manage the playbook actions by skipping tags:
+      - "restore" - should be skipped if you don't want to restore jenkins from the backup
+  Examples:
+    Restore jenkins from the backup:
+        ansible-playbook jenkins.yml --private-key=~/.ssh/actonic --vault-password-file=~/.ansible_vault_pass.txt
+    Don't restore jenkins from the backup
+        ansible-playbook jenkins.yml --private-key=~/.ssh/actonic --vault-password-file=~/.ansible_vault_pass.txt --skip-tags "restore"
+4. haproxy.yml:
+     ansible-playbook haproxy.yml --private-key=~/.ssh/actonic --vault-password-file=~/.ansible_vault_pass.txt
+5. k8s.yml:
+  5.1 Set the variable "backup_archive_file" with the relevant backup file (i.e. backup_archive_file: k8s_archive_2020-01-15_00-02.tar.gz)
+  5.2 You can manage the playbook actions by skipping tags:
+     - "not_k8s" - should be skipped on all k8s master/node servers (means don't deploy firewall)
+     - "join_node" - should be skipped if you don't want to join k8s node to the working cluster (valid only for k8s nodes)
+     - "restore" - should be skipped if you don't want to restore k8s master "vmd31384.contaboserver.net" from the backup but want to join the rest master servers to the working cluster (valid only for k8s masters)
+  Examples:
+    Restore k8s master "vmd31384.contaboserver.net" from the backup + join the rest master servers to the working cluster + join k8s node to the working cluster:
+        ansible-playbook k8s.yml --private-key=~/.ssh/actonic --vault-password-file=~/.ansible_vault_pass.txt --skip-tags "not_k8s"
+    Restore k8s master "vmd31384.contaboserver.net" from the backup + join the rest master servers to the working cluster + DON'T join k8s node to the working cluster:
+        ansible-playbook k8s.yml --private-key=~/.ssh/actonic --vault-password-file=~/.ansible_vault_pass.txt --skip-tags "not_k8s,join_node"
+    DON'T restore k8s master "vmd31384.contaboserver.net" from the backup + join the rest master servers to the working cluster + join k8s node to the working cluster:
+        ansible-playbook k8s.yml --private-key=~/.ssh/actonic --vault-password-file=~/.ansible_vault_pass.txt --skip-tags "not_k8s,restore"
+    DON'T restore k8s master "vmd31384.contaboserver.net" from the backup + join the rest master servers to the working cluster + DON'T join k8s node to the working cluster:
+        ansible-playbook k8s.yml --private-key=~/.ssh/actonic --vault-password-file=~/.ansible_vault_pass.txt --skip-tags "not_k8s,restore,join_node"
+
+
+TO-DO:
+в API поде много ошибок
+правильно выводить мемберов из etcd
+
+Check and test: haproxy as frontend proxy instead of nginx
+write ansible role to deploy ha-proxy
+Stop k8s, backup, redeploy first node from backup(condition when hostname == k8s_master1) and join second and third via ansible + frontend
+Install ubuntu 19 to all k8s masters and allign docker and kubelet, kubeadm, kubectl versions.
+
+
+

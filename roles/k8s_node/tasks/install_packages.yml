@@ -1,0 +1,20 @@
+---
+- name: Add an Apt signing key of the repository
+  apt_key:
+    url: "{{ apt_key_url }}"
+    state: present
+
+- name: Install kubernetes repositories
+  apt_repository:
+    repo: "{{ apt_repo }}"
+    state: present
+
+- name: Update apt packages cache
+  become: true
+  apt:
+    upgrade: no
+    update_cache: yes
+
+- name: Install packages
+  apt:
+    name: "{{ packages }}"

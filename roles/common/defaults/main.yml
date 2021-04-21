@@ -1,2 +1,44 @@
 ---
 # defaults file for common
+packages:
+  - sysstat
+  - net-tools
+  - atop
+  - git
+  - pigz
+  - wget
+  - glusterfs-client
+  - python3-pip
+  - python-pip
+  - nodejs
+  - npm
+  - software-properties-common
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gnupg-agent
+sshd_config:
+  port: '2200'
+  AddressFamily: 'any'
+  UseDNS: 'no'
+  SyslogFacility: 'AUTHPRIV'
+  # Authentication:
+  LoginGraceTime: '1m'
+  StrictModes: 'yes'
+  MaxAuthTries: '20'
+  MaxSessions: '100'
+  PermitRootLogin: 'yes'
+  PubkeyAuthentication: 'yes'
+  IgnoreRhosts: 'yes'
+  PasswordAuthentication: 'yes'
+  PermitEmptyPasswords: 'no'
+  ClientAliveInterval: '0'
+  AllowAgentForwarding: 'yes'
+  AllowTcpForwarding: 'yes'
+ssh_public_keys:
+  lukshap: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCz0JrgPJs80Ob3PCp1qedFs2RZUton6UYMhkvMfme6FZXdntQRVUN9QwdVDb6MdzkePgmGRxVUcY/cysbh/lg/Tr/xeA55h9+zmHc3yorgU2iBl45DW0aY7InMooVZLhqWqbGf7Xe0qwkS1mPkZJLtpMYIveJBCklS0hxPV2bW96r+BYxewJ26iMUvgc8TYuPvsLFw8lczd1okBpUdsMfvkg/HsvjDzBI/QDP4f9DX6PBxVFMUvEKozL4hTFLmDE2AfSnUbqwDRLFNBZcCx5EO4I4IdMVVeE9s4KdIoHPY/Ger/RqQWO8YA967dRscqQPleixzeV+JNO10cPmkBD1jQDXtR+ZFOKHnvDeQqLpTEF1tIXYB3/ZbjBhF+jnaNwEzz03lhA3ZKbmvEW6ma1/Izt3CPhLEcHFQ6Qf7QQx+LCpRLOeYJa90jQqFcLg9J3D/zpRPiXOGdsgbqw6KVuX2fucdEFdCjI4PT4bBQxD1hdlpU5zVJ9Eqvh6mxoVL5UZxgvwEtl8hqCLlXZn7higGiRIHujpGbAv8AL5bea07l1CJ9VlUv3F3ADU3D/RK5DeMLWohUje4Z7lmTwcYJT0pcnsag1PWqsKWlbT/RhimWy9yiX8Kgju01VbJkI2Ncun+Tvsl+iguTBDzA7l2F16CvucKJ1tCr//CyCW2VzZRzQ== lukshap@gmail.com
+  jenkins: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDY9O5XMENbZEs1oAsDIeEf6lFhT5rjoUl1PqYjWzsaohODvGmihxf/AqfzurKIQlN9lLOE5HfqaSa0HG7+U9BssQsiR1bfEMYqrhXzQMirBkMAz076C7yfN+cIVEfTsiDU9WylPVH0N1JcK7oMGMQi6xojMfUuUMS2p+pePScztZ+Ge9rZ9tCFMK5Pp0b0xRE1MIL71ZeKPEEKI6N/KCWFVKLEv+Ebx8YtGsJS+P/UhESA07h6rJ4xM3UfTyzgjcUokPKm99nNadc23L4QkLp1DHZvVJTLqsMBWDzU9D1eU3GNXKd4Fm1DGliHk8xAPVZB9GIqWJxCfgDJUeg8AyH/ jenkins@noreply.local
+  avoronov: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0u3VvCK8UZ2OtadhVxwZ54DDToZn9xw2KGtsEFqAWD0XTCExi3seFoGtd5tZ9Ll47Ba49fpOuXel7fm9KcNsXX4IX2iO92RvPSwy8RyQyfnNmATu4Z19B6NNt5i7f/XDC7IAF4NTfJCp8nzRpV4UjPjzq2lazAeoLSA3G0mVT//pOE0bCyB3VSan1LT7jhGCG2mRoIQYcMUj+mj5Zj698UEI9V1PsYf25S0VTktR2mK5mRHuzToRRXtVPG+x7hWPbDUXiEDus+FZNhixNEmbJWV/0VUIf7+7z/5DYx3+Y6utxbp2chGGL0NsapAS1VzBAoLbBxPG2BgtdkRbpAGrL avoronov
+  pisklenov: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQClP1yZrUGY8RZqFLJtKHwJXOgXwnF5YkrCjt+8T9WBPsM6TJpBr1miJOVpfXos8Ka8Lwo5lyN5Y7h99b4aGd+kk4ErZQho9NHHowjINPFnzXn8JL0zVgx97uRyCuSRzyf7gjwZZSp6Ru3X933zvYfxKWsN6nWNBvEPSatind9xQM8CsNYH+aMpolgQ52M6OAWPP7JfA8/EzOsd4tiz8+A01TU4CYrQHeXOSoGkXSZtZz9HXQrTMsYm2OPtWuRYpJnp4uKZ/K8RTtjsoIcDTa0kLhxPNKc183VJvxTc4jgHF43TAmpccyufVdCVbCndrq6kbrBce0Ytw4w8V4Zr5/aFiAmmWFEtkAGgWyBOf7lb+F9907rkx7bQ6MevJQJxx7aWhSfixhNa9yBBKwMZHB/jIBxQUBNgwlKrTLAISW+jELRrWGyaYY31Y4Sf+wwSj5U8bHPBdm06rrd4BT9bDqDhb9/TrMF53ITHNk3foEkQInlvH2iSvQQCkGYKGW5uOg7rzjPyhqgFBaYl+9YpaFbB9+qnNbQfQhy1jsy5WZ9Pg3lhK+RvTVxWP2eBJBMayes3YduyNh2X2cpmQwHo+M/PeX/5dCdnh1BWOfVXZO1jaZ+f/V2QW07UNzU2skCiEC+qsGSI3H5UoeGyn01Y+GE4FUTyQJTzVhQJDUfHI+jZXQ== pisklenov@actonic.de
+  ivanow: ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAmduzBf7Mw39BN2ODZ1gedoYgQd2JmaGn0wHWULBsLrw5pmSJfe1aedPyktZlH/cSiywjnN1zC0TlpeYju77O9aFD24IIMg8cS1Wsn+Z9/sChJOFeaAztfNGfYUKXEAnlk6U0RkLRoYmeig+NozpVLHYBt38qnJN81/+tCXMr9WMWpJjH4A6OY1CsD9xOagCHOZhwTyc/C3i3r8dSXsO2r5T6FB9kziQ85qHvsajJMNh+sveigN5rCDJlokUUcSmy/ewMExdqBsLhkAjAJWgaq074yLV1Nstrw3y4xik4P++X5UNuOwfbmwIQTZqo/s881B+7TXzVBbl2doYfa7fUJQ== Ivanow Andrew
+  ashaporenko: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQ4NOFfi6Rf8F1o9dnHxvDlFnowrxK168B0dmDaNUELODz+gCrdZXq2exSh9EzwFh8B/ZNMqhapMpFP+jXhqTGBfgpI39bdOKqj65JhBF+yPsNifsMcTx3CLYbIRcH+KWiZPYEuYtHxe9t2I0irvd+ITT8pmZA4tdsS9EgcwJRxWHDFiqNMOVwBBMOusVggcLdJ1hrH+BydlRuSlhXx295U/0uD/j/wh1nl4sQ/ydl98bEY0i/nbGTK3QGjSjLrOyVvCyiFKdmZ3MAXvu2CEnmsdOHCXVrcAawduFDx0belADVH4NeJDJ4NjzmsaJdYj6bl+/oRddYt9/V4QMOUy37 ashaporenko

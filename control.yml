@@ -1,0 +1,9 @@
+--- # ansible playbook for database deployment
+- hosts: control
+  gather_facts: yes
+  roles:
+   - common
+   - control
+   - docker
+   - smtp
+

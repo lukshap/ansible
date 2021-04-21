@@ -1,0 +1,8 @@
+--- # ansible playbook for database deployment
+- hosts: jenkins
+  gather_facts: yes
+  roles:
+   - common
+   - smtp
+   - jenkins
+

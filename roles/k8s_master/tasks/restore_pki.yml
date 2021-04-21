@@ -1,0 +1,29 @@
+---
+- name: Ensure dir "{{ pki_dir }}" exists
+  file:
+    path: "{{ pki_dir }}"
+    state: directory
+    follow: true
+
+- name: List files in the "{{ pki_dir }}"
+  command: "ls {{ pki_dir }}"
+  register: dir_out
+
+- name: Output files in the "{{ pki_dir }}"
+  debug: var=dir_out.stdout_lines
+
+- name: Restore pki files from backup
+  copy:
+    remote_src: yes
+    src: "/opt/{{ backup_archive_dir }}/kubernetes/pki/"
+    dest: "{{ pki_dir }}"
+  when: not dir_out.stdout_lines
+
+- name: Remove files
+  file:
+    path: "{{ pki_dir }}/{{ item }}"
+    state: absent
+  with_items:
+    - apiserver.crt
+    - apiserver.key
+  when: not dir_out.stdout_lines

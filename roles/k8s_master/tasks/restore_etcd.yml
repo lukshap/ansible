@@ -1,0 +1,20 @@
+---
+- name: Ensure dir "{{ etcd_dir }}" exists
+  file:
+    path: "{{ etcd_dir }}"
+    state: directory
+    follow: true
+
+- name: List files in the "{{ etcd_dir }}"
+  command: "ls {{ etcd_dir }}"
+  register: dir_out
+
+- name: Output files in the "{{ etcd_dir }}"
+  debug: var=dir_out.stdout_lines
+
+- name: Restore etcd files from backup
+  copy:
+    remote_src: yes
+    src: "/opt/{{ backup_archive_dir }}/member"
+    dest: "{{ etcd_dir }}"
+  when: not dir_out.stdout_lines

@@ -1,0 +1,42 @@
+---
+# tasks file for glusterfs
+- name: Install repositories
+  apt_repository:
+    repo: "{{ item }}"
+    state: present
+  with_items: "{{ apt_repository }}"
+
+- name: Install glusterfs
+  apt:
+    name: "{{ glusterfs_packages }}"
+
+- name: Ensure glusterd is runnnig
+  systemd:
+    name: "{{ glusterfs.service }}"
+    state: started
+    enabled: yes
+
+- name: Create folders
+  file:
+    path: "/opt/{{ item }}"
+    state: directory
+    mode: '0755'
+  with_items: "{{ glusterfs.volumes }}"
+
+- name: Create glusterfs volumes
+  gluster_volume:
+    state: present
+    name: "{{ item }}"
+    bricks: "/opt/{{ item }}"
+    force: true
+    cluster:
+      - "{{ ansible_default_ipv4.address }}"
+  with_items: "{{ glusterfs.volumes }}"
+
+- name: Set crontab
+  cron:
+    name: "{{ item.key }}"
+    minute: "{{ item.value.minute }}"
+    hour: "{{ item.value.hour }}"
+    job: "{{ item.value.command }}"
+  with_dict: "{{ cron }}"

@@ -1,0 +1,26 @@
+---
+# tasks file for k8s_node
+- import_tasks: install_packages.yml
+
+- name: remove swap entry from fstab
+  lineinfile:
+    path: /etc/fstab
+    regexp: "swap"
+    state: absent
+    backup: yes
+
+- name: Disable swap
+  shell: swapoff --all
+
+- name: Output the Kubernetes cluster token to connect k8s node to cluster
+  debug: var=hostvars[groups['k8s_master'][0]]['K8S_TOKEN'].stdout
+
+- name: Output the cluster CA Hash to connect Kubernetes node to cluster
+  debug: var=hostvars[groups['k8s_master'][0]]['K8S_MASTER_CA_HASH'].stdout
+
+- name: Join to Kubernetes cluster
+  shell: |
+    kubeadm join --token={{ hostvars[groups['k8s_master'][0]]['K8S_TOKEN'].stdout }} \
+                 --discovery-token-ca-cert-hash sha256:{{ hostvars[groups['k8s_master'][0]]['K8S_MASTER_CA_HASH'].stdout }} \
+                  {{ controlPlaneEndpoint }}
+  tags: [join_node]

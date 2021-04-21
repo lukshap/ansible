@@ -1,0 +1,8 @@
+--- # ansible playbook for database deployment
+- hosts: ceph
+  gather_facts: yes
+  roles:
+#   - common
+#   - smtp
+   - ceph
+

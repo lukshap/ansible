@@ -1,0 +1,7 @@
+apiVersion: kubeadm.k8s.io/v1beta1
+kind: ClusterConfiguration
+kubernetesVersion: stable
+# REPLACE with `loadbalancer` IP
+controlPlaneEndpoint: "{{ kubeadm_config.controlPlaneEndpoint }}"
+networking:
+  podSubnet: {{ kubeadm_config.podSubnet }}

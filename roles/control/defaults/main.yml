@@ -1,0 +1,16 @@
+---
+# defaults file for control
+pip_packages:
+  - psycopg2
+  - passlib
+  - kubernetes
+npm_url: https://www.npmjs.com/install.sh
+nginx:
+  ports:
+    - 80
+    - 443
+cron:
+  cleanup logs:
+    minute: 0
+    hour: 0
+    command: rm -rf /root/actonic/k8s/on-premise/app/frontend/id*.log >> /dev/null 2>&1

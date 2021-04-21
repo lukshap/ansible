@@ -1,0 +1,27 @@
+---
+# defaults file for k8s
+glusterfs_mount_dir: k8s_etcd
+backup_archive_dir: k8s_archive_backup
+#backup_archive_file: k8s_archive_2020-01-22_00-01.tar.gz
+backup_archive_file: k8s_archive_2020-02-19_00-01.tar.gz
+etcd_dir: /var/lib/etcd/
+pki_dir: /etc/kubernetes/pki/
+apt_key_url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+apt_repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+admin_file_src: /etc/kubernetes/admin.conf
+admin_dir: .kube
+admin_file_dst: config
+packages:
+  - kubelet=1.15.2-00
+  - kubeadm=1.15.2-00
+  - kubectl=1.15.2-00
+kubeadm_config:
+  dir: /etc/kubernetes/kubeadm
+  file: kubeadm-config.yaml
+  podSubnet: 10.244.0.0/16
+  controlPlaneEndpoint: "{{ groups['haproxy'][0] }}:{{ haproxy_port }}"
+cron:
+  backup k8s:
+    minute: 0
+    hour: 0
+    command: bash /root/actonic/docker-images/backup/k8s_etcd/k8s_etcd.sh >> /root/actonic/docker-images/backup/k8s_etcd/k8s_etcd.sh.runlog 2>&1

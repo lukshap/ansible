@@ -1,0 +1,20 @@
+---
+- name: Ensure dir for backup_archive exists
+  file:
+    path: "/opt/{{ backup_archive_dir }}"
+    state: directory
+    follow: true
+
+- name: List files in the "/opt/{{ backup_archive_dir }}"
+  command: "ls /opt/{{ backup_archive_dir }}"
+  register: dir_out
+
+- name: Output files in the "/opt/{{ backup_archive_dir }}"
+  debug: var=dir_out.stdout_lines
+
+- name: Extract "/mnt/{{ glusterfs_mount_dir }}/{{ backup_archive }}"
+  unarchive:
+    remote_src: yes
+    src: "/mnt/{{ glusterfs_mount_dir }}/{{ backup_archive_file }}"
+    dest: "/opt/{{ backup_archive_dir }}"
+  when: not dir_out.stdout_lines

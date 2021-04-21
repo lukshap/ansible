@@ -1,0 +1,6 @@
+--- # ansible playbook for k8s masters deployment
+- hosts: haproxy
+  gather_facts: no
+  roles:
+   - common
+   - haproxy
